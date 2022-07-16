@@ -6,26 +6,30 @@ import Box from '@mui/material/Box';
 function AnswerBoard(props) {
 
     const buttonArrayNumbers = utils.setArray(9);
-    const goalValue = props.numberSelected;
-    const [selectedValues, setSelectedValues] = useState([])
-
-    const onClick = (value) => {
-        const allValues = [...selectedValues, value];
-        setSelectedValues(allValues);
-        const difference = goalValue - selectedValues.reduce((partial_sum, a)=> partial_sum + a, 0);
-        if (difference === 0) {
-            props.numberSelected()
-        }
+    const initialStyleProps = {  
+        color: 'primary.main' ,
+        width: '50px', height: '50px'
     }
+
+    const onSelection = (value) => {
+        props.onClick(value)
+    }
+
+    function determineClass(value) {
+        if (props.previousSelections.includes(value) || props.currentSelections.includes(value)) {
+
+            return { ...initialStyleProps, color: 'warning.main' };
+        }
+        return initialStyleProps;
+    }
+
     return (
       <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '250px', gap: '10px' }}>
         {
             buttonArrayNumbers.map(x => 
                 <div>
-                    <Button key={x} variant="outlined" sx={{ 
-                        color: 'primary.main', fontWeight: 'medium',
-                        width: '50px', height: '50px'
-                        }}>
+                    <Button onClick={() => onSelection(x + 1)}
+                        key={x} variant="outlined" sx={() => determineClass(x+1)}>
                         {x + 1}
                     </Button>
                 </div>

@@ -8,10 +8,24 @@ import { useState } from 'react';
 
 function App() {
   const [numberOfStars, setNumberOfStars] = useState((Math.floor(Math.random() * 10) % 9) + 1);
+  const [currentSelections, setCurrentSelections] = useState([]);
+  const [previousSelections, setPreviousSelections] = useState([]);
 
   const initializeGame = () => {
-    console.log('hidi hoe neighbour');
-    setNumberOfStars((Math.floor(Math.random() * 10) % 9) + 1);
+    setNumberOfStars(Math.floor(Math.random() * 9) + 1);
+  }
+  const onSelection = (value) => {
+    if (currentSelections.includes(value) || previousSelections.includes(value)) {
+      return;
+    }
+    setCurrentSelections([value, ...currentSelections]);
+    console.log(currentSelections);
+    let currentTotal = currentSelections.reduce((partial_sum, a)=> partial_sum + a, 0);
+    if (currentTotal === numberOfStars) {
+      setPreviousSelections([...previousSelections, ...currentSelections]);
+      setCurrentSelections([])
+      initializeGame();
+    }
   }
 
   return (
@@ -29,10 +43,10 @@ function App() {
         }}>
 
           <Box component="div" sx={{ height: '225px', p: 2 }}>
-            <StarDisplay numberOfStars={numberOfStars}  onClick={initializeGame}/>
+            <StarDisplay numberOfStars={numberOfStars} />
           </Box>
           <Box  component="div" sx={{ height: '225px', p: 2 }}>
-            <AnswerBoard />
+            <AnswerBoard onClick={onSelection} previousSelections={previousSelections} currentSelections={currentSelections} />
           </Box>
         </Box>
       </Card>
