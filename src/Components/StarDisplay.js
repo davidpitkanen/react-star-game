@@ -1,17 +1,28 @@
 import utils from '../Utils/utils';
-import StarShape from './StarShape';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
+import { useState } from 'react';
+
 function StarDisplay(props) {
 
-    const numberOfStars = props.numberOfStars;
+  const [numberOfStars, setNumberOfStars] = useState(props.numberOfStars);
 
+  const resetState = () => {
+    props.onClick();
+    console.log(props.numberOfStars);
+    setNumberOfStars(props.numberOfStars);
+  }
     return (
-      <div>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '150px'}}>
         {
-            utils.setStarGrid(numberOfStars, 3).map(_ => {
-                return <div className="starshape-row"> <StarShape numberOfStars={_.length} /> </div>
+            utils.setArray(props.numberOfStars).map(_ => {
+                return <div> <StarOutlinedIcon key={_} sx={{ color: 'primary.main' }} fontSize="large"/> </div>
             })
         }
-      </div> 
+        <Button onClick={() => resetState()}>Hello</Button> 
+
+      </Box>
   )
 }
 
